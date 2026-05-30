@@ -98,12 +98,20 @@ npm start        # production
 - Repo: `https://github.com/Ali-KURAL/sidemark-backend` (private)
 - Sadece `backend/` klasörü GitHub'da, `extension/` local'de
 
+## Google OAuth Girişi (Aktif)
+Yorum yazmak için Google ile giriş **zorunlu**. Beğeni girişsiz çalışır.
+
+- **Extension ID:** `llcgcpoakoghnafgcjcicmeciilcoodd`
+- **OAuth Client ID:** `444197345778-5b22mon4srme9pvf4sg34dg39q1mvlhr.apps.googleusercontent.com` (`manifest.json` → `oauth2.client_id`)
+- **Google Cloud projesi:** "Sidemark" (External consent screen, Chrome Extension client)
+- Akış: `chrome.identity.getAuthToken` → access token → backend `userinfo` ile doğrular → `sub`=google_id, `name`=username saklanır
+- **Güvenlik:** Username client'tan değil doğrulanmış Google profilinden alınır (taklit engelli). Backend token'sız POST'u 401 ile reddeder.
+- **Token yenileme:** Her gönderimde `getAuthToken({interactive:false})` ile taze token alınır, 401'de cache temizlenip retry edilir.
+- ⚠️ Google login **sadece store sürümünde** çalışır — local extension ID farklı olduğu için OAuth reddeder.
+
 ## Ertelenmiş Özellikler
-- **Google OAuth girişi** — Kod hazır ama devre dışı. Chrome Web Store'a yayınlandıktan sonra eklenecek. Google Cloud Console'da OAuth client ID gerektirir. Detaylar memory'de kayıtlı.
-- **Chrome Web Store yayını** — Henüz yayınlanmadı
-- **Yorum bildirimleri**
-- **Admin moderasyon paneli**
-- **Pagination** (çok sayıda yorum için)
+- **Yorum bildirimleri** — Yanıt gelince kullanıcıya bildirim
+- **Freemium** — Premium özellikler için ödeme sistemi
 
 ## Dikkat Edilecekler
 - Backend değişikliği sonrası Railway deploy beklenmeli (~1-2 dk)
